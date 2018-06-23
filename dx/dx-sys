@@ -21,7 +21,7 @@ read num
 case "$num" in
 	[1] )
 		rm -rf sys-bbr.dx
-		curl -# -o bbr.dx https://raw.githubusercontent.com/reokey/shell/master/dx/sys-bbr.dx
+		curl -# -o sys-bbr.dx https://raw.githubusercontent.com/reokey/shell/master/dx/sys-bbr.dx
 		sh sys-bbr.dx
 		;;
 	[2] )
