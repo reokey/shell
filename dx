@@ -1,0 +1,243 @@
+#!/usr/bin/env bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+rm -rf dxhz*
+clear
+sh_ver="0.2"
+
+#取系统信息
+get_opsy() {
+    [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
+    [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
+    [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
+}
+opsy=$( get_opsy )
+arch=$( uname -m )
+lbit=$( getconf LONG_BIT )
+kern=$( uname -r )
+
+Update_Shell(){
+	echo -e "当前版本为 [ ${sh_ver} ]，开始检测最新版本..."
+	sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/reokey/shell/master/dx"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1)
+	[[ -z ${sh_new_ver} ]] && echo -e "${Error} 检测最新版本失败 !" && exit 0
+	if [[ ${sh_new_ver} != ${sh_ver} ]]; then
+		echo -e "发现新版本[ ${sh_new_ver} ]，是否更新？[Y/n]"
+		stty erase '^H' && read -p "(默认: y):" yn
+		[[ -z "${yn}" ]] && yn="y"
+		if [[ ${yn} == [Yy] ]]; then
+			wget -N --no-check-certificate https://raw.githubusercontent.com/reokey/shell/master/dx && chmod +x dx
+			echo -e "脚本已更新为最新版本[ ${sh_new_ver} ] !"
+		else
+			echo && echo "	已取消..." && echo
+		fi
+	else
+		clear
+		echo -e "当前已是最新版本[ ${sh_new_ver} ] !"
+	fi
+}
+
+echo -e "\033[32m┌───────────── 达奚Linux一键管理脚本 [Ver ${sh_ver}] https://reokey.com ─────────────┐\033[0m"
+echo -e "\033[32m│                                                                              │\033[0m"
+echo -e "\033[32m│                                                                              │\033[0m"
+echo -e "\033[32m│                                                       达奚瀚泽 TG:3727638611 │\033[0m"
+echo -e "\033[32m└──────────────────────────────────────────────────────────────────────────────┘\033[0m"
+echo
+echo -e "\033[32m系统: $opsy  架构: $arch[$lbit Bit]  内核: $kern\033[0m"
+echo
+echo -e "\033[33m┌──────────────────────────────────────────────────────────────────────────────┐\033[0m"
+echo -e "\033[33m│    0 更换系统    1 内核升级    2 系统优化    3 系统加固    4 系统其他        │\033[0m"
+echo -e "\033[33m│    5 未知命令    6 未知命令    7 未知命令    8 未知命令    9 未知命令        │\033[0m"
+echo -e "\033[33m└──────────────────────────────────────────────────────────────────────────────┘\033[0m"
+echo
+echo -e "\033[33m                                                                升级脚本输入'z'\033[0m"
+echo
+echo -e "\033[32m┌──────────────────────────────────────────────────────────────────────────────┐\033[0m"
+echo -e "\033[32m│    a Aria2        b 未知命令    c 未知命令    d Docker      e 未知命令       │\033[0m"
+echo -e "\033[32m│    f Fikkerd,Frp  g Git,GDlist  h Hass,H5ai   i 未知命令    j 未知命令       │\033[0m"
+echo -e "\033[32m│    k Kms          l Lnmp        m 未知命令    n 未知命令    o OneinStack     │\033[0m"
+echo -e "\033[32m│    p Python       q 未知命令    r Rclone      s Shadowsocks t 未知命令       │\033[0m"
+echo -e "\033[32m│    u 未知命令     v VMess       w 未知命令    x 未知命令    y 未知命令       │\033[0m"
+echo -e "\033[32m└──────────────────────────────────────────────────────────────────────────────┘\033[0m"
+echo -e "\033[32m 请输入数字 [0-9]或[a-z]:\033[0m"
+read num
+case "$num" in
+			[0] )
+				rm -rf dxhz0
+				curl -# -o dxhz0 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz0
+				sh dxhz0
+		;;
+			[1] )
+				rm -rf dxhz1
+				curl -# -o dxhz1 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz1
+				sh dxhz1
+		;;
+			[2] )
+				rm -rf dxhz2
+				curl -# -o dxhz2 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz2
+				sh dxhz2
+		;;
+			[3] )
+				rm -rf dxhz3
+				curl -# -o dxhz3 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz3
+				sh dxhz3
+		;;
+			[4] )
+				rm -rf dxhz4
+				curl -# -o dxhz4 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz4
+				sh dxhz4
+		;;
+			[5] )
+				rm -rf dxhz5
+				curl -# -o dxhz5 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz5
+				sh dxhz5
+		;;
+			[6] )
+				rm -rf dxhz6
+				curl -# -o dxhz6 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz6
+				sh dxhz6
+		;;
+			[7] )
+				rm -rf dxhz7
+				curl -# -o dxhz7 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz7
+				sh dxhz7
+		;;
+			[8] )
+				rm -rf dxhz8
+				curl -# -o dxhz8 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz8
+				sh dxhz8
+		;;
+			[9] )
+				rm -rf dxhz9
+				curl -# -o dxhz9 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz9
+				sh dxhz9
+		;;
+			[a] )
+				rm -rf dxhza
+				curl -# -o dxhza https://raw.githubusercontent.com/reokey/shell/master/data/dxhza
+				sh dxhza
+		;;
+			[b] )
+				rm -rf dxhzb
+				curl -# -o dxhzb https://raw.githubusercontent.com/reokey/shell/master/data/dxhzb
+				sh dxhzb
+		;;
+			[c] )
+				rm -rf dxhzc
+				curl -# -o dxsys https://raw.githubusercontent.com/reokey/shell/master/data/dxhzc
+				sh dxhzc
+		;;
+			[d] )
+				rm -rf dxhzd
+				curl -# -o dxhzd https://raw.githubusercontent.com/reokey/shell/master/data/dxhzd
+				sh dxhzd
+		;;
+			[e] )
+				rm -rf dxhze
+				curl -# -o dxhze https://raw.githubusercontent.com/reokey/shell/master/data/dxhze
+				sh dxhze
+		;;
+			[f] )
+				rm -rf dxhzf
+				curl -# -o dxhzf https://raw.githubusercontent.com/reokey/shell/master/data/dxhzf
+				sh dxhzf
+		;;
+			[g] )
+				rm -rf dxhzg
+				curl -# -o dxhzg https://raw.githubusercontent.com/reokey/shell/master/data/dxhzg
+				sh dxhzg
+		;;
+			[h] )
+				rm -rf dxhzh
+				curl -# -o dxhzh https://raw.githubusercontent.com/reokey/shell/master/data/dxhzh
+				sh dxhzh
+		;;
+			[i] )
+				rm -rf dxhzi
+				curl -# -o dxhzi https://raw.githubusercontent.com/reokey/shell/master/data/dxhzi
+				sh dxhzi
+		;;
+			[j] )
+				rm -rf dxhzj
+				curl -# -o dxhzj https://raw.githubusercontent.com/reokey/shell/master/data/dxhzj
+				sh dxhzj
+		;;
+			[k] )
+				rm -rf dxhzk
+				curl -# -o dxhzk https://raw.githubusercontent.com/reokey/shell/master/data/dxhzk
+				sh dxhzk
+		;;
+			[l] )
+				rm -rf dxhzl
+				curl -# -o dxhzl https://raw.githubusercontent.com/reokey/shell/master/data/dxhzl
+				sh dxhzl
+		;;
+			[m] )
+				rm -rf dxhzm
+				curl -# -o dxhzm https://raw.githubusercontent.com/reokey/shell/master/data/dxhzm
+				sh dxhzm
+		;;
+			[n] )
+				rm -rf dxhzn
+				curl -# -o dxhzn https://raw.githubusercontent.com/reokey/shell/master/data/dxhzn
+				sh dxhzn
+		;;
+			[o] )
+				rm -rf dxhzo
+				curl -# -o dxhzo https://raw.githubusercontent.com/reokey/shell/master/data/dxhzo
+				sh dxhzo
+		;;
+			[p] )
+				rm -rf dxhzp
+				curl -# -o dxhzp https://raw.githubusercontent.com/reokey/shell/master/data/dxhzp
+				sh dxhzp
+		;;
+			[q] )
+				rm -rf dxhzq
+				curl -# -o dxhzq https://raw.githubusercontent.com/reokey/shell/master/data/dxhzq
+				sh dxhzq
+		;;
+			[r] )
+				rm -rf dxhzr
+				curl -# -o dxhzr https://raw.githubusercontent.com/reokey/shell/master/data/dxhzr
+				sh dxhzr
+		;;
+			[s] )
+				rm -rf dxhzs
+				curl -# -o dxhzs https://raw.githubusercontent.com/reokey/shell/master/data/dxhzs
+				sh dxhzs
+		;;
+			[t] )
+				rm -rf dxhzt
+				curl -# -o dxhzt https://raw.githubusercontent.com/reokey/shell/master/data/dxhzt
+				sh dxhzt
+		;;
+			[u] )
+				rm -rf dxhzu
+				curl -# -o dxhzu https://raw.githubusercontent.com/reokey/shell/master/data/dxhzu
+				sh dxhzu
+		;;
+			[v] )
+				rm -rf dxhzv
+				curl -# -o dxhzv https://raw.githubusercontent.com/reokey/shell/master/data/dxhzv
+				sh dxhzv
+		;;
+			[w] )
+				rm -rf dxhzw
+				curl -# -o dxhzw https://raw.githubusercontent.com/reokey/shell/master/data/dxhzw
+				sh dxhzw
+		;;
+			[x] )
+				rm -rf dxhzx
+				curl -# -o dxhzx https://raw.githubusercontent.com/reokey/shell/master/data/dxhzx
+				sh dxhzx
+		;;
+			[y] )
+				rm -rf dxhzy
+				curl -# -o dxhzy https://raw.githubusercontent.com/reokey/shell/master/data/dxhzy
+				sh dxhzy
+		;;
+			[z] )
+				Update_Shell
+		;;
+		*) echo -e "\033[31m 输入错误,请重新输入.\033[0m";;
+	esac
