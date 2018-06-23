@@ -1,0 +1,36 @@
+#!/bin/bash
+clear
+#notice=`curl -s http://www.lu8.win/downloads/frp/gonggao | sed -n 's/gonggao\=//p'`
+#versiontime=`curl -s http://www.lu8.win/downloads/frp/gonggao | sed -n 's/versiontime\=//p'`
+notice='请注意客户端和服务端版本保持一致！'
+versiontime='2017年12月28日'
+
+echo -e "\033[44;37m::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\033[0m"
+echo -e "\033[44;37m::    欢迎使用达奚Linux一键脚本    reokey.com        转载请勿删除本信息       ::\033[0m"
+echo -e "\033[44;37m::               Ver $versiontime                达奚瀚泽 TG 3727638611     ::\033[0m"
+echo -e "\033[44;37m::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\033[0m"
+echo ""
+echo -e "\033[31m请选择你要的操作【黄色需要重启配置】回车键为默认值或退出键\033[0m"
+echo ""
+echo -e "\033[33m     1、升级最新内核开启BBR"
+echo -e "\033[33m     2、配置完成后台启动服务端 \033[0m"
+echo -e "\033[32m     3、更换frps程序版本 \033[0m"
+echo -e "\033[32m     4、将frps服务端加入开机启动 \033[0m"
+echo ""
+read num
+case "$num" in
+	[1] )
+		rm -rf sys-bbr.dx
+		curl -# -o bbr.dx https://raw.githubusercontent.com/reokey/shell/master/dx/sys-bbr.dx
+		sh sys-bbr.dx
+		;;
+	[2] )
+		rm -rf frpc.bat	
+		curl -# -o frpc.bat http://www.lu8.win/downloads/frp/linux/frpc.bat		
+		sh frpc.bat			
+		;;
+	[3] )
+			exit			
+		;;
+		*) echo -e "\033[31m选择错误，退出，请重新执行【./dx】\033[0m";;
+	esac
