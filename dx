@@ -1,0 +1,256 @@
+#!/usr/bin/env bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+sh_ver="2018.06.24"
+
+#显示菜单
+menu(){
+rm -rf dxhz*
+clear
+menu_dxhz
+menu_display
+menu_command
+}
+
+#系统信息
+get_opsy() {
+    [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
+    [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
+    [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
+}
+opsy=$( get_opsy )
+arch=$( uname -m )
+lbit=$( getconf LONG_BIT )
+kern=$( uname -r )
+
+#升级脚本
+update_menu(){
+	clear
+	menu_dxhz
+	echo -e "\033[33m  当前版本为 [ ${sh_ver} ]，开始检测最新版本...\033[0m"
+	sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/reokey/shell/master/dx"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1)
+	[[ -z ${sh_new_ver} ]] && echo -e "${Error} 检测最新版本失败 !" && exit 0
+	if [[ ${sh_new_ver} != ${sh_ver} ]]; then
+		echo -e "\033[33m  发现新版本[ ${sh_new_ver} ]，按[回车键]开始更新，或按 Ctrl+C 取消\033[0m"
+		stty erase '^H' && read -p "" yn
+		[[ -z "${yn}" ]] && yn="y"
+		if [[ ${yn} == [Yy] ]]; then
+			wget -N --no-check-certificate https://raw.githubusercontent.com/reokey/shell/master/dx && chmod +x dx
+			echo -e "\033[33m  脚本已更新为最新版本[ ${sh_new_ver} ] !\033[0m"
+		else
+			echo && echo -e "\033[33m  已取消...\033[0m" && echo
+		fi
+	else
+		echo -e "\033[33m  当前已是最新版本[ ${sh_new_ver} ] !\033[0m"
+	fi
+}
+
+#升级内核
+update_kernel(){
+	clear
+	menu_dxhz
+	echo -e "\033[33m                                  升 级 内 核\033[0m"
+	echo
+	echo -e "\033[33m    1 一键安装最新内核并开启BBR    2 卸载旧kernel以及相关\033[0m"
+	echo
+	echo
+	echo -e "\033[32m 请输入 [0-9]:\033[0m"
+
+read -n1 -p "" answer
+case $answer in
++)
+	menu
+	;;
+-)
+	exit
+	;;
+1)
+	rm -rf dxhz1
+	curl -# -o dxhz1 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz1
+	sh dxhz1
+	;;
+2)
+	yum remove *kernel* -y
+	yum --enablerepo=elrepo-kernel -y install kernel-ml-headers
+	yum --enablerepo=elrepo-kernel -y install kernel-ml-tools
+	yum install dracut-kernel
+	rpm -qa |grep kernel
+	;;
+*)
+	echo -e "\033[31m按键非指定命令,脚本已退出.\033[0m"
+	;;
+esac
+}
+
+#系统优化
+system_optimize(){
+	clear
+	menu_dxhz
+}
+
+#菜单头部
+menu_dxhz(){
+	echo -e "\033[32m┌───── https://t.me/daxihanze LINUX管理脚本 Ver ${sh_ver} TG:daxihanze ───────┐\033[0m"
+	echo -e "\033[32m│                                                                              │\033[0m"
+	echo -e "\033[32m│                                                                              │\033[0m"
+	echo -e "\033[32m│                                                              搬运工:达奚瀚泽 │\033[0m"
+	echo -e "\033[32m└──────────────────────────────────────────────────────────────────────────────┘\033[0m"
+	echo -e "\033[33m                                                               主菜单+ / 退出-  \033[0m"
+	echo
+	echo -e "\033[32m  当前系统 - $opsy  架构 - $arch $lbit位  内核版本 - $kern\033[0m"
+	echo
+}
+
+#菜单主体
+menu_display(){
+	echo
+	echo -e "\033[33m┌──────────────────────────────── 系 统 命 令  ────────────────────────────────┐\033[0m"
+	echo -e "\033[33m│                                                                              │\033[0m"
+	echo -e "\033[33m│    0 升级脚本    1 升级内核    2 系统优化    3 系统加固    4 系统其他        │\033[0m"
+	echo -e "\033[33m│    5 即将添加    6 即将添加    7 即将添加    8 即将添加    9 更换系统        │\033[0m"
+	echo -e "\033[33m│                                                                              │\033[0m"
+	echo -e "\033[33m└──────────────────────────────────────────────────────────────────────────────┘\033[0m"
+	echo
+	echo -e "\033[32m┌──────────────────────────────── 软 件 命 令  ────────────────────────────────┐\033[0m"
+	echo -e "\033[32m│                                                                              │\033[0m"
+	echo -e "\033[32m│    a Aria2        b 即将添加    c 即将添加    d Docker      e 即将添加       │\033[0m"
+	echo -e "\033[32m│    f Fikkerd,Frp  g Git,GDlist  h Hass,H5ai   i 即将添加    j 即将添加       │\033[0m"
+	echo -e "\033[32m│    k Kms          l Lnmp        m 即将添加    n 即将添加    o OneinStack     │\033[0m"
+	echo -e "\033[32m│    p Python       q 即将添加    r Rclone      s Shadowsocks t 即将添加       │\033[0m"
+	echo -e "\033[32m│    u 即将添加     v VMess       w 即将添加    x 即将添加    y 即将添加       │\033[0m"
+	echo -e "\033[32m│                                                                              │\033[0m"
+	echo -e "\033[32m└──────────────────────────────────────────────────────────────────────────────┘\033[0m"
+	echo	
+	echo -e "\033[32m 请输入 [0-9、a-z]:\033[0m"
+}
+
+#菜单命令
+menu_command(){
+read -n1 -p "" answer
+case $answer in
++)
+	menu
+	;;
+-)
+	exit
+	;;
+0)
+	update_menu
+	;;
+1)
+	update_kernel
+	;;
+2)
+	system_optimize
+	;;
+3)
+	echo "即将添加"
+	;;
+4)
+	echo "即将添加"
+	;;
+5)
+	rm -rf dxhz1
+	curl -# -o dxhz1 https://raw.githubusercontent.com/reokey/shell/master/data/dxhz1
+	sh dxhz1
+	;;
+6)
+	echo "即将添加"
+	;;
+7)
+	echo "即将添加"
+	;;
+8)
+	echo "即将添加"
+	;;
+9)
+	echo "即将添加"
+	;;
+A|a)
+	echo "即将添加"
+	;;
+B|b)
+	echo "即将添加"
+	;;
+C|c)
+	echo "即将添加"
+	;;
+D|d)
+	echo "即将添加"
+	;;
+E|e)
+	echo "即将添加"
+	;;
+F|f)
+	echo "即将添加"
+	;;
+G|g)
+	echo "即将添加"
+	;;
+H|h)
+	echo "即将添加"
+	;;
+I|i)
+	echo "即将添加"
+	;;
+J|j)
+	echo "即将添加"
+	;;
+K|k)
+	echo "即将添加"
+	;;
+L|l)
+	echo "即将添加"
+	;;
+M|m)
+	echo "即将添加"
+	;;
+N|n)
+	echo "即将添加"
+	;;
+O|o)
+	echo "即将添加"
+	;;
+P|p)
+	echo "即将添加"
+	;;
+Q|q)
+	echo "即将添加"
+	;;
+R|r)
+	echo "即将添加"
+	;;
+S|s)
+	echo "即将添加"
+	;;
+T|t)
+	echo "即将添加"
+	;;
+U|u)
+	echo "即将添加"
+	;;
+V|v)
+	echo "即将添加"
+	;;
+W|w)
+	echo "即将添加"
+	;;
+X|x)
+	echo "即将添加"
+	;;
+Y|y)
+	echo "即将添加"
+	;;
+Z|z)
+	echo "即将添加"
+	;;
+*)
+	echo -e "\033[31m按键非指定命令,脚本已退出.\033[0m"
+	;;
+esac
+exit 0
+}
+
+#脚本开始
+menu
+exit
