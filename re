@@ -1414,14 +1414,19 @@ if [ ! -e $dx_re ];then
 	cp -f $0 $dx_re && chmod 777 $dx_re
 elif [ ! -e $dx_re_n ];then
 	wget --no-check-certificate -qO- "https://raw.githubusercontent.com/reokey/shell/master/re"
-elif [ ! -e $dx_re ];then
+		if [ $? -eq 0 ]; then
+				echo -e "${dco_p} 提示${dco_t}\t${dco_s}下载成功 ......${dco_t}"
+			else
+				echo -e "${dco_p} 提示${dco_t}\t${dco_s}下载失败.${dco_t}" && exit
+			fi
+elif [ -e $dx_re_n ];then
 	echo "dx_re_md5 $dx_re_md5"
 	echo "dx_re_n_md5 $dx_re_n_md5"
 	if [ $dx_re_md5 == $dx_re_n_md5 ]; then
-	exit
-elif [ ! -e $dx_re ];then
-	echo $dx_re 作为文件或文件夹是存在的
-	rm -rf 
+		echo -e "${dco_p} 提示${dco_t}\t${dco_s}无需更新.${dco_t}" && exit
+elif [ -e $dx_re ];then
+	cp -f $0 $dx_re && chmod 777 $dx_re
+	echo -e "${dco_p} 提示${dco_t}\t${dco_s}无需更新.${dco_t}" && exit
 fi
 }
 
